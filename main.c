@@ -4,22 +4,9 @@
 
 int main(void)
 {
-    Player snake;
-    snake.player.height = 10;
-    snake.player.width  = 10;
-    snake.player.x = WIDTH / 2;
-    snake.player.y = HEIGHT / 2;
-    snake.x_direction = 0;
-    snake.y_direction = 0;
-    snake.speed = 200;
+    Initialize_game();
 
-    Food food;
-    food.entity.height = 10;
-    food.entity.width  = 10;
-    food.entity.x = WIDTH / 2;
-    food.entity.y = HEIGHT / 2;
-    food.roundedness = 0.75;
-    food.color = LIME;
+    uint64_t snake_size = 0;
 
     InitWindow(WIDTH, HEIGHT, "Gaym");
     SetTargetFPS(60);
@@ -61,15 +48,14 @@ int main(void)
         if(CheckCollisionRecs(snake.player, food.entity))
         {
             food.entity.x = GetRandomValue(0, WIDTH);
-            food.entity.y = GetRandomValue(0, HEIGHT);
+            food.entity.y = GetRandomValue(0, HEIGHT - food.entity.y);
+            snake_size++;
         }
-        
+
         if (IsKeyReleased(KEY_SPACE))
         {
             printf("Frame-Time: %lf\n", dt);
         }
-        
-        
 
         BeginDrawing();
             ClearBackground(BLACK);
@@ -82,4 +68,20 @@ int main(void)
     
     CloseWindow();
     return 0;
+}
+
+void Initialize_game(void)
+{
+    snake.player.height = 10;
+    snake.player.width  = 10;
+    snake.player.x = WIDTH / 2;
+    snake.player.y = HEIGHT / 2;
+    snake.speed = 200.0f;
+
+    food.entity.height = 10;
+    food.entity.width  = 10;
+    food.entity.x = WIDTH / 2;
+    food.entity.y = HEIGHT / 2;
+    food.roundedness = 0.75;
+    food.color = LIME;
 }
