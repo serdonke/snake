@@ -1,5 +1,8 @@
-#include <stdint.h>
+#include <raylib.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <math.h>
 
 #define BLOCK_SIZE 40
 #define BLOCK_COUNT 25
@@ -7,12 +10,10 @@
 #define WIDTH  BLOCK_SIZE * BLOCK_COUNT
 #define HEIGHT BLOCK_SIZE * BLOCK_COUNT
 
-#define SNAKE_SZ 2048
-
 typedef struct Rect
 {
-  int x;
-  int y;
+  float x;
+  float y;
   float width;
   float height;
 } Rect;

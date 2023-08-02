@@ -1,5 +1,3 @@
-#include <raylib.h>
-#include <stdio.h>
 #include "setup.h"
 
 int main(void)
@@ -49,7 +47,7 @@ void Initialize_game(void)
 {
     snake.player.height = BLOCK_SIZE;
     snake.player.width  = BLOCK_SIZE;
-    snake.player.x = 0;
+    snake.player.x = 5;
     snake.player.y = 10;
     snake.speed = 15.0f;
 
@@ -63,7 +61,7 @@ void Initialize_game(void)
 
 bool DetectRectCollision(Rect a, Rect b)
 {
-    return ((a.x == b.x) && (a.y == b.y));
+    return ((floor(a.x) == floor(b.x)) && (floor(a.y) == floor(b.y)));
 }
 
 void SnakeControl(double dt)
@@ -88,7 +86,7 @@ void SnakeControl(double dt)
         snake.x_direction = 0;
         snake.y_direction = 1;
     }
-    
+
     if (snake.y_direction == 0)
     {
         snake.player.x += (snake.speed * snake.x_direction) * dt;
