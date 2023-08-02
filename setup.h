@@ -1,14 +1,25 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define WIDTH  1280
-#define HEIGHT 720
+#define BLOCK_SIZE 40
+#define BLOCK_COUNT 25
+
+#define WIDTH  BLOCK_SIZE * BLOCK_COUNT
+#define HEIGHT BLOCK_SIZE * BLOCK_COUNT
 
 #define SNAKE_SZ 2048
 
+typedef struct Rect
+{
+  int x;
+  int y;
+  float width;
+  float height;
+} Rect;
+
 typedef struct Player
 {
-    Rectangle player;
+    Rect player;
     int x_direction;
     int y_direction;
     double speed;
@@ -16,7 +27,7 @@ typedef struct Player
 
 typedef struct Food
 {
-    Rectangle entity;
+    Rect entity;
     double roundedness;
     Color color;
 } Food;
@@ -26,3 +37,5 @@ Player snake;
 Food food;
 
 void Initialize_game(void);
+bool DetectRectCollision(Rect a, Rect b);
+void SnakeControl(double dt);

@@ -15,40 +15,12 @@ int main(void)
     {
         double dt = GetFrameTime();
 
-        if (IsKeyReleased(KEY_RIGHT) && snake.x_direction != -1)
-        {
-            snake.y_direction = 0;
-            snake.x_direction = 1;
-        }
-        else if (IsKeyReleased(KEY_LEFT) && snake.x_direction != 1)
-        {
-            snake.y_direction = 0;
-            snake.x_direction = -1;
-        }
-        else if (IsKeyReleased(KEY_UP) && snake.y_direction != 1)
-        {
-            snake.x_direction = 0;
-            snake.y_direction = -1;
-        }
-        else if (IsKeyReleased(KEY_DOWN) && snake.y_direction != -1)
-        {
-            snake.x_direction = 0;
-            snake.y_direction = 1;
-        }
-        
-        if (snake.y_direction == 0)
-        {
-            snake.player.x += (snake.speed * snake.x_direction) * dt;
-        }
-        if (snake.x_direction == 0)
-        {
-            snake.player.y += (snake.speed * snake.y_direction) * dt;
-        }
+        SnakeControl(dt);
 
-        if(CheckCollisionRecs(snake.player, food.entity))
+        if(DetectRectCollision(snake.player, food.entity))
         {
-            food.entity.x = GetRandomValue(0, WIDTH);
-            food.entity.y = GetRandomValue(0, HEIGHT - food.entity.y);
+            food.entity.x = GetRandomValue(0, BLOCK_COUNT - 1);
+            food.entity.y = GetRandomValue(0, BLOCK_COUNT - 1);
             snake_size++;
         }
 
@@ -59,8 +31,11 @@ int main(void)
 
         BeginDrawing();
             ClearBackground(BLACK);
-            DrawRectangleRounded(food.entity, food.roundedness, 1, food.color);
-            DrawRectangleRec(snake.player, RED);
+
+            DrawRectangleRounded((Rectangle){(int)food.entity.x * BLOCK_SIZE, (int)food.entity.y * BLOCK_SIZE, food.entity.width, food.entity.height}, food.roundedness, 1, food.color);
+
+            DrawRectangleRec((Rectangle){(int)snake.player.x * BLOCK_SIZE, (int)snake.player.y * BLOCK_SIZE, snake.player.width, snake.player.height}, RED);
+
         EndDrawing();
 
         DrawFPS(10, 10);
@@ -72,16 +47,54 @@ int main(void)
 
 void Initialize_game(void)
 {
-    snake.player.height = 10;
-    snake.player.width  = 10;
-    snake.player.x = WIDTH / 2;
-    snake.player.y = HEIGHT / 2;
-    snake.speed = 200.0f;
+    snake.player.height = BLOCK_SIZE;
+    snake.player.width  = BLOCK_SIZE;
+    snake.player.x = 0;
+    snake.player.y = 10;
+    snake.speed = 15.0f;
 
-    food.entity.height = 10;
-    food.entity.width  = 10;
-    food.entity.x = WIDTH / 2;
-    food.entity.y = HEIGHT / 2;
-    food.roundedness = 0.75;
+    food.entity.height = BLOCK_SIZE;
+    food.entity.width  = BLOCK_SIZE;
+    food.entity.x = 0;
+    food.entity.y = 10;
+    food.roundedness = 0.95;
     food.color = LIME;
+}
+
+bool DetectRectCollision(Rect a, Rect b)
+{
+    return ((a.x == b.x) && (a.y == b.y));
+}
+
+void SnakeControl(double dt)
+{
+    if (IsKeyReleased(KEY_RIGHT) && snake.x_direction != -1)
+    {
+        snake.y_direction = 0;
+        snake.x_direction = 1;
+    }
+    else if (IsKeyReleased(KEY_LEFT) && snake.x_direction != 1)
+    {
+        snake.y_direction = 0;
+        snake.x_direction = -1;
+    }
+    else if (IsKeyReleased(KEY_UP) && snake.y_direction != 1)
+    {
+        snake.x_direction = 0;
+        snake.y_direction = -1;
+    }
+    else if (IsKeyReleased(KEY_DOWN) && snake.y_direction != -1)
+    {
+        snake.x_direction = 0;
+        snake.y_direction = 1;
+    }
+    
+    if (snake.y_direction == 0)
+    {
+        snake.player.x += (snake.speed * snake.x_direction) * dt;
+    }
+    if (snake.x_direction == 0)
+    {
+        snake.player.y += (snake.speed * snake.y_direction) * dt;
+    }
 }
