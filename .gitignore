@@ -3,3 +3,4 @@ build
 *.code-workspace
 .sconsign.dblite
 sconstruct
+\#*

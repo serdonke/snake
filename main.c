@@ -13,7 +13,15 @@ int main(void)
     {
         double dt = GetFrameTime();
 
-        SnakeControl(dt);
+        if ((snake.player.x > 0 && snake.player.x < BLOCK_COUNT) &&
+            (snake.player.y > 0 && snake.player.y < BLOCK_COUNT))
+        {
+            SnakeControl(dt);
+        }
+
+
+        WrapSnakeBody();
+        MoveSnakeBody(dt);
 
         //TODO: Switch to a better collision function
         //NOTE: Maye AABB might help
@@ -24,9 +32,14 @@ int main(void)
         BeginDrawing();
             ClearBackground(SAGE);
 
-            DrawRectangleRounded((Rectangle){(int)food.entity.x * BLOCK_SIZE, (int)food.entity.y * BLOCK_SIZE, food.entity.width, food.entity.height}, food.roundedness, 1, food.color);
+            DrawRectangleRounded((Rectangle){(int)food.entity.x * BLOCK_SIZE,
+                                 (int)food.entity.y * BLOCK_SIZE,
+                                 food.entity.width, food.entity.height},
+                                 food.roundedness, 1, food.color);
 
-            DrawRectangleRec((Rectangle){(int)snake.player.x * BLOCK_SIZE, (int)snake.player.y * BLOCK_SIZE, snake.player.width, snake.player.height}, REDISH);
+            DrawRectangleRec((Rectangle){(int)snake.player.x * BLOCK_SIZE,
+                             (int)snake.player.y * BLOCK_SIZE, snake.player.width,
+                             snake.player.height}, REDISH);
 
         EndDrawing();
 
@@ -41,19 +54,19 @@ void Initialize_game(void)
 {
     snake.player.height = BLOCK_SIZE;
     snake.player.width  = BLOCK_SIZE;
-    snake.player.x = 5;
-    snake.player.y = 14;
-    snake.speed = 15.0f;
+    snake.player.x = GetRandomValue(0, BLOCK_COUNT - 1);
+    snake.player.y = GetRandomValue(0, BLOCK_COUNT - 1);
+    snake.speed = 13.0f;
 
     food.entity.height = BLOCK_SIZE;
     food.entity.width  = BLOCK_SIZE;
-    food.entity.x = 0;
-    food.entity.y = 10;
+    food.entity.x = GetRandomValue(0, BLOCK_COUNT - 1);
+    food.entity.y = GetRandomValue(0, BLOCK_COUNT - 1);
     food.roundedness = 0.95;
     food.color = ORANGISH;
 }
 
-void SnakeControl(double dt)
+void SnakeControl()
 {
     if (IsKeyReleased(KEY_RIGHT) && snake.x_direction != -1)
     {
@@ -75,7 +88,10 @@ void SnakeControl(double dt)
         snake.x_direction = 0;
         snake.y_direction = 1;
     }
+}
 
+void MoveSnakeBody(double dt)
+{
     if (snake.y_direction == 0)
     {
         snake.player.x += (snake.speed * snake.x_direction) * dt;
@@ -84,15 +100,13 @@ void SnakeControl(double dt)
     {
         snake.player.y += (snake.speed * snake.y_direction) * dt;
     }
-
-    WrapSnakeBody();
 }
 
 void CollisionFunctions(void)
 {
     if(DetectRectCollision(snake.player, food.entity))
     {
-        food.entity.x = 0;
+        food.entity.x = GetRandomValue(0, BLOCK_COUNT - 1);
         food.entity.y = GetRandomValue(0, BLOCK_COUNT - 1);
         snake_size++;
 

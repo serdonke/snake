@@ -1,5 +1,9 @@
 @echo off
 
+if not exist build (
+   mkdir build
+)
+
 if "%1"=="c" (
     del build\game.exe
     echo Built executable yeeted

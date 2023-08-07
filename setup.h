@@ -40,8 +40,9 @@ Food food;
 
 void Initialize_game(void);
 bool DetectRectCollision(Rectangle a, Rectangle b);
-void SnakeControl(double dt);
+void SnakeControl();
 void CollisionFunctions(void);
 void WrapSnakeBody(void);
+void MoveSnakeBody(double dt);
 
 void DebugFunctions(void);
